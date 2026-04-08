@@ -8,10 +8,15 @@
 <body>
 
 <div class="container mt-4">
-    <h1>Campus Events</h1>
+    <h1>Events</h1>
 
-    <input type="text" id="search" class="form-control mb-3" placeholder="Search events...">
+    <!-- Search bar with button -->
+    <div class="mb-3">
+        <input type="text" id="search" class="form-control d-inline w-75" placeholder="Search events...">
+        <button id="searchBtn" class="btn btn-primary d-inline">Search</button>
+    </div>
 
+    <!-- Events container -->
     <div id="events-container" class="row"></div>
 </div>
 

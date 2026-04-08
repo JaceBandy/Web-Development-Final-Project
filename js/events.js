@@ -1,22 +1,22 @@
 const API_KEY = "JYG3CHGX54ZZZ3GKSP";
-let allEvents = [];
+const container = document.getElementById("events-container");
+const searchInput = document.getElementById("search");
+const searchBtn = document.getElementById("searchBtn");
 
-async function getEvents() {
+// Fetch events from Eventbrite based on query
+async function getEvents(query = "college") {
     try {
         const response = await fetch(
-            `https://www.eventbriteapi.com/v3/events/search/?q=college&location.address=Tulsa&token=${API_KEY}`
+            `https://www.eventbriteapi.com/v3/events/search/?q=${encodeURIComponent(query)}&location.address=Tulsa&token=${API_KEY}`
         );
-
         const data = await response.json();
 
-        // Check if events exist
-        if (!data.events) {
-            console.log("No events found");
+        if (!data.events || data.events.length === 0) {
+            container.innerHTML = "<p>No events found.</p>";
             return;
         }
 
-        // Format the events for display
-        allEvents = data.events.map(event => ({
+        const allEvents = data.events.map(event => ({
             name: event.name.text,
             date: event.start.local,
             url: event.url
@@ -25,12 +25,12 @@ async function getEvents() {
         displayEvents(allEvents);
     } catch (error) {
         console.error("Error fetching events:", error);
+        container.innerHTML = "<p>Unable to fetch events.</p>";
     }
 }
 
-// Function to display events on the page
+// Display events
 function displayEvents(events) {
-    const container = document.getElementById("events-container");
     container.innerHTML = "";
 
     events.forEach(event => {
@@ -47,5 +47,14 @@ function displayEvents(events) {
     });
 }
 
-// Fetch events when page loads
+// Search button click
+searchBtn.addEventListener("click", (e) => {
+    e.preventDefault(); // prevent form submit/reload
+    const query = searchInput.value.trim();
+    if (query !== "") {
+        getEvents(query);
+    }
+});
+
+// Initial fetch on page load
 getEvents();
