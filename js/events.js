@@ -29,7 +29,7 @@ async function getEvents(query = "college") {
     }
 }
 
-// Display events
+// Display events as cards
 function displayEvents(events) {
     container.innerHTML = "";
 
@@ -47,14 +47,26 @@ function displayEvents(events) {
     });
 }
 
+// Save favorite event to localStorage
+function saveEvent(eventName) {
+    let saved = JSON.parse(localStorage.getItem("events")) || [];
+
+    if (!saved.includes(eventName)) {
+        saved.push(eventName);
+    }
+
+    localStorage.setItem("events", JSON.stringify(saved));
+    alert(`Saved "${eventName}" to favorites!`);
+}
+
 // Search button click
 searchBtn.addEventListener("click", (e) => {
-    e.preventDefault(); // prevent form submit/reload
+    e.preventDefault(); // prevent page reload
     const query = searchInput.value.trim();
     if (query !== "") {
         getEvents(query);
     }
 });
 
-// Initial fetch on page load
+// Initial fetch
 getEvents();
